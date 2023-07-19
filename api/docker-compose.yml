@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  ts-node-docker:
+    build:
+      context: .
+      dockerfile: dockerfile
+      target: base
+    volumes:
+      - ./src:/spaceX/api
+    container_name: ts-node-docker
+    expose:
+      - '3030'
+    ports:
+      - '3030:3030'
+    command: pnpm dev

@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "build": "tsc -p",
-    "dev": "nodemon main.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/infra/http/express.ts",
+    "test:watch": "jest --watch",
     "lint": "eslint . --fix"
   },
   "author": "Felipe Augustos",
@@ -26,6 +26,7 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "mongoose": "^7.4.0"
+    "mongoose": "^7.4.0",
+    "zod": "^3.21.4"
   }
 }

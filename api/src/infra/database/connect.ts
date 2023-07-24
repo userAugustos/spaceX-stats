@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
+import * as process from "process";
 
 export async function connect() {
-  return await mongoose.connect(`mongodb+srv://root:sKOtvSR2YUSD311@augustos.wzptygy.mongodb.net/?retryWrites=true&w=majority`);
+  return await mongoose.connect(`mongodb+srv://root:${process.env.ROOT_PASSWORD}@augustos.wzptygy.mongodb.net/${process.env.CURRENT_DB}?retryWrites=true&w=majority`);
 }

@@ -14,7 +14,7 @@ app.use(express.json())
 app.get('/', index)
 app.get('/launches', listAll)
 app.get('/launches/stats', listStats);
-app.get('/data', refreshData);
+app.post('/data', refreshData);
 
 (async () => {
   try{

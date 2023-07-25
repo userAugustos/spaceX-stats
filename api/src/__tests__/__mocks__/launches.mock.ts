@@ -147,7 +147,6 @@ const LaunchWithLookup = {
   }
 }
 
-
 export const listAllDefaultData = {
   "results": [
     LaunchesDefaultData
@@ -272,20 +271,45 @@ export const rocketsArr = [
     "id": "5e9d0d95eda69955f709d1eb"
   }]
 
-export const launchesStatsResult = [
+export const launchesStatsResult = {
+  total: 205,
+  success: 181,
+  fails: 5,
+  rockets: [
+    {
+      _id: '5e9d0d95eda69955f709d1eb',
+      count: 5,
+      date: [],
+      name: 'Falcon 1'
+    },
+    {
+      _id: '5e9d0d95eda69955f709d1eb',
+      count: 5,
+      date: [],
+      name: 'Falcon 1'
+    }
+  ]
+}
+
+export const rocketStats = [
   {
-    _id :"5e9d0d95eda69955f709d1eb",
-    count: 5,
-    date : [],
-    name:"Falcon 1"
-  },
-  {
-    _id :"5e9d0d95eda69955f709d1eb",
-    count: 5,
-    date : [],
-    name:"Falcon 1"
+    data: [
+      {
+        _id: '5e9d0d95eda69955f709d1eb',
+        count: 5,
+        date: [],
+        name: 'Falcon 1'
+      },
+      {
+        _id: '5e9d0d95eda69955f709d1eb',
+        count: 5,
+        date: [],
+        name: 'Falcon 1'
+      }
+    ]
   }
 ]
+
 
 export const launchStats = {
   total: [{
@@ -296,6 +320,6 @@ export const launchStats = {
   }],
     fails: [{
     fails: 5
-  }]
+  }],
 }
 

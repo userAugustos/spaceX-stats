@@ -3,7 +3,7 @@ import {
   launchesStatsResult, launchStats,
   listAllDataWithlookup,
   listAllDefaultData,
-  rocketsArr
+  rocketsArr, rocketStats
 } from "../__mocks__/launches.mock";
 import { statsResult } from '../__mocks__/controller.mock'
 import {Launches} from "@services/Launches";
@@ -23,7 +23,6 @@ describe('Launches Service', () => {
   const rocketCreateSpy = jest.spyOn(rocketsModel, 'create')
 
   const laucnhesAggregateFindSpy = jest.spyOn(launchesModel, 'aggregate');
-  const launchesCountSpy = jest.spyOn(launchesModel, 'count')
   const launchFindOneSpy = jest.spyOn(launchesModel, 'findOne')
   const launchCreateSpy = jest.spyOn(launchesModel, 'create')
 
@@ -127,10 +126,10 @@ describe('Launches Service', () => {
   })
   it('Should return stats data to fill in the graphs', async () => {
     laucnhesAggregateFindSpy.mockResolvedValueOnce([launchStats])
-    laucnhesAggregateFindSpy.mockResolvedValueOnce(launchesStatsResult)
+    laucnhesAggregateFindSpy.mockResolvedValueOnce(rocketStats)
 
     const res =  await launches.stats()
 
-    expect(res).toEqual(statsResult)
+    expect(res).toEqual(launchesStatsResult)
   })
 })

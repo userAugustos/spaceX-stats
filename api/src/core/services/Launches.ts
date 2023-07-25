@@ -166,12 +166,7 @@ export class Launches {
 
     const { total, success, fails } = launchStats[0];
 
-    const rockets: Array<{
-      _id : string,
-      count: number,
-      date : string[],
-      name: string
-    }> = await this.launches.aggregate([
+    const rockets = await this.launches.aggregate([
       {
         $lookup: {
           from: 'rockets',
@@ -184,20 +179,37 @@ export class Launches {
         $unwind: '$rocketData',
       },
       {
-        $group:{
-          _id:  '$rocketData.id',
-          count: { $sum: 1 },
-          date: { $push: '$rocketData.static_fire_date_utc'},
-          name: { $first:  '$rocketData.name' }
+        $project:{
+          id: 1,
+          static_fire_date_utc: 1,
+          rocketData: {
+            name: 1,
+            id: 1
+          },
+          date_utc: 1,
         },
       },
+      {
+        $facet: {
+          data: [
+            {
+              $group: {
+                _id: '$rocketData.id',
+                count: { $sum: 1 },
+                date: { $push: '$date_utc' },
+                name: { $first: '$rocketData.name' }
+              }
+            }
+          ]
+        }
+      }
     ]);
 
     return {
       total: total[0].total,
       success: success[0].success,
       fails: fails[0].fails,
-      rockets
+      rockets: rockets[0].data
     }
   }
 }

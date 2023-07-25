@@ -1,0 +1,364 @@
+openapi: 3.0.3
+info:
+  title: SpaceX API - OpenAPI 3.0
+  description: SpaceX API returns data of launches from spaceX company
+  contact:
+    email: felipe_augustos84@outlook.com.br
+  version: 1.0.0
+servers:
+  - url: localhost:3030
+paths:
+  /:
+    get:
+      tags:
+        - index
+      summary: get the start message!
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Index'
+  /launches:
+    get:
+      tags:
+        - list all
+      summary: get all launche data in the db
+      parameters:
+        - in: query
+          name: page
+          schema:
+            $ref: '#/components/schemas/ListAllQueryParams/properties/page'
+          required: false
+          description: Page number for pagination
+
+        - in: query
+          name: search
+          schema:
+            $ref: '#/components/schemas/ListAllQueryParams/properties/search'
+          required: false
+          description: Search term to filter launches
+
+        - in: query
+          name: limit
+          schema:
+            $ref: '#/components/schemas/ListAllQueryParams/properties/limit'
+          required: false
+          description: Maximum number of results per page 
+      responses:
+        '200':
+          description: Successful operation with data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAllResponse'
+        '204':
+          description: Successful operation without data
+  /launches/stats:
+    get:
+      tags:
+        - launch stats
+      summary: Get statistics of launches
+      responses:
+        '200':
+          description: Successful operation with statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LaunchStatsResponse'
+  /data:
+    post:
+      tags:
+        - refresh data
+      summary: Refresh data in the database
+      responses:
+        '200':
+          description: Successful operation with data update status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LaunchData'
+    
+components:
+  schemas:
+    Index:
+      type: object
+      properties:
+        message: 
+          type: string
+          example: "Fullstack Challenge 🏅 - Space X API"
+    LaunchData:
+      type: object
+      properties:
+        fairings:
+          type: object 
+        links:
+          type: object
+          properties:
+            patch:
+              type: object
+              properties:
+                small:
+                  type: string
+                  example: "https://example.com/small_patch.png"
+                large:
+                  type: string
+                  example: "https://example.com/large_patch.png"
+  
+            reddit:
+              type: object
+              properties:
+                campaign:
+                  type: string
+                  example: "https://reddit.com/r/spacex/campaign/launch123"
+                launch:
+                  type: string
+                  example: "https://reddit.com/r/spacex/launch/launch123"
+                media:
+                  type: string
+                  example: "https://reddit.com/r/spacex/media/launch123"
+                recovery:
+                  type: string
+                  example: "https://reddit.com/r/spacex/recovery/launch123"
+  
+            flickr:
+              type: object
+              properties:
+                small:
+                  type: object
+                  example: { key: "value" }
+                original:
+                  type: array
+                  items:
+                    type: string
+                  example: ["https://example.com/flickr_image1.jpg", "https://example.com/flickr_image2.jpg"]
+  
+            presskit:
+              type: string
+              example: "https://example.com/presskit.pdf"
+  
+            webcast:
+              type: string
+              example: "https://example.com/webcast"
+  
+            youtube_id:
+              type: string
+              example: "d3U3dYd_0CQ"
+  
+            article:
+              type: string
+              example: "https://example.com/article"
+  
+            wikipedia:
+              type: string
+              example: "https://en.wikipedia.org/wiki/SpaceX"
+  
+        static_fire_date_utc:
+          type: string
+          format: date-time
+          example: "2023-08-01T12:00:00Z"
+  
+        static_fire_date_unix:
+          type: number
+          example: 1679644800
+  
+        tdb:
+          type: boolean
+          example: true
+  
+        net:
+          type: boolean
+          example: true
+  
+        window:
+          type: number
+          example: 3600
+  
+        rocket:
+          type: string
+          example: "5e9d0d95eda69973a809d1ec" 
+        success:
+          type: boolean
+          example: true
+  
+        failures:
+          type: array
+          items:
+            type: object 
+        details:
+          type: string
+          example: "Successful launch of Falcon 9."
+  
+        crew:
+          type: array
+          items:
+            type: string
+          example: ["astronaut1", "astronaut2"]
+  
+        ships:
+          type: array
+          items:
+            type: string
+          example: ["ship1", "ship2"]
+  
+        capsules:
+          type: array
+          items:
+            type: string
+          example: ["capsule1", "capsule2"]
+  
+        payloads:
+          type: array
+          items:
+            type: string
+          example: ["payload1", "payload2"]
+  
+        launchpad:
+          type: string
+          example: "5e9e4502f5090927f8566f85"
+  
+        auto_update:
+          type: boolean
+          example: true
+  
+        flight_number:
+          type: number
+          example: 123
+  
+        name:
+          type: string
+          example: "SpaceX Launch 123"
+  
+        date_utc:
+          type: string
+          format: date-time
+          example: "2023-08-01T12:00:00Z"
+  
+        date_unix:
+          type: number
+          example: 1679644800
+  
+        date_local:
+          type: string
+          example: "2023-08-01T08:00:00-04:00"
+  
+        date_precision:
+          type: string
+          example: "hour"
+  
+        upcoming:
+          type: boolean
+          example: true
+  
+        cores:
+          type: array
+          items:
+            type: object
+            properties:
+              core:
+                type: string
+              flight:
+                type: number
+              gridfins:
+                type: boolean
+              legs:
+                type: boolean
+              reused:
+                type: boolean
+              landing_attempt:
+                type: boolean
+              landing_success:
+                type: boolean
+              landing_type:
+                type: string
+              landpad:
+                type: string
+  
+        id:
+          type: string
+          example: "6243ae7daf52800c6e91925b"
+    ListAllResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LaunchData' # Reference to the LaunchData schema
+  
+        totalDocs:
+          type: number
+          example: 20
+  
+        page:
+          type: number
+          example: 1
+  
+        totalPages:
+          type: number
+          example: 5
+  
+        hasNext:
+          type: boolean
+          example: true
+  
+        hasPrev:
+          type: boolean
+          example: false
+    ListAllQueryParams:
+      type: object
+      properties:
+        page:
+          type: number
+          example: 1
+        search:
+          type: string
+          example: "Falcon"
+        limit:
+          type: number
+          example: 10
+    LaunchStatsResponse:
+      type: object
+      properties:
+        total:
+          type: number
+          example: 100
+
+        success:
+          type: number
+          example: 80
+
+        fails:
+          type: number
+          example: 20
+
+        rockets:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                example: "5e9d0d95eda69973a809d1ec"
+
+              count:
+                type: number
+                example: 50
+
+              date:
+                type: array
+                items:
+                  type: string
+                example: ["2023-08-01T12:00:00Z", "2023-08-15T10:30:00Z"]
+
+              name:
+                type: string
+                example: "Falcon 9"

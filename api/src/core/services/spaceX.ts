@@ -26,6 +26,7 @@ export class SpaceX {
         .then<Rocket[]>((res) => res.json())
         .then((data) => data);
     }catch (err: any) {
+      console.debug(err)
       throw new Error(err.message)
     }
   }

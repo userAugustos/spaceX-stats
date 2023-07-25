@@ -1,6 +1,13 @@
-import {LaunchesDefaultData, listAllDefaultData, rocketsArr} from "../__mocks__/launches";
+import {
+  LaunchesDefaultData,
+  launchesStatsResult, launchStats,
+  listAllDataWithlookup,
+  listAllDefaultData,
+  rocketsArr
+} from "../__mocks__/launches.mock";
+import { statsResult } from '../__mocks__/controller.mock'
 import {Launches} from "@services/Launches";
-import {SpaceX} from "@useCase/spaceXUseCase";
+import {SpaceX} from "@services/spaceX";
 import { launchesModel, rocketsModel} from "@database/models";
 
 jest.mock('@database/models')
@@ -15,7 +22,7 @@ describe('Launches Service', () => {
   const rocketFindOneSpy = jest.spyOn(rocketsModel, 'findOne')
   const rocketCreateSpy = jest.spyOn(rocketsModel, 'create')
 
-  const launchesFindSpy = jest.spyOn(launchesModel, 'find');
+  const laucnhesAggregateFindSpy = jest.spyOn(launchesModel, 'aggregate');
   const launchesCountSpy = jest.spyOn(launchesModel, 'count')
   const launchFindOneSpy = jest.spyOn(launchesModel, 'findOne')
   const launchCreateSpy = jest.spyOn(launchesModel, 'create')
@@ -68,31 +75,62 @@ describe('Launches Service', () => {
     }
   })
   it('Should return data of list, organized with count, pages and results', async () => {
-    launchesFindSpy.mockReturnValueOnce({
+    laucnhesAggregateFindSpy.mockReturnValueOnce({ // from count
+      count: jest.fn().mockReturnValueOnce([{
+        project: 2
+      }])
+    } as any)
+    laucnhesAggregateFindSpy.mockReturnValueOnce({
       skip: jest.fn().mockReturnValueOnce({
-        limit: jest.fn().mockResolvedValueOnce(listAllDefaultData.results)
+        limit: jest.fn().mockResolvedValueOnce(listAllDataWithlookup.results)
       })
     } as any) // isso é loucura.
 
-    const res = await launches.list('', 10, Number(listAllDefaultData.page))
+    const res = await launches.list('falcon 1', 10, Number(listAllDefaultData.page))
 
-    expect(res.results).toEqual(listAllDefaultData.results)
+    expect(res.results).toEqual(listAllDataWithlookup.results)
+  })
+  it('Should make query with success, but find none result', async () => {
+    laucnhesAggregateFindSpy.mockReturnValueOnce({ // from count
+      count: jest.fn().mockReturnValueOnce([{
+        project: 0
+      }])
+    } as any)
+    laucnhesAggregateFindSpy.mockReturnValueOnce({
+      skip: jest.fn().mockReturnValueOnce({
+        limit: jest.fn().mockResolvedValueOnce([])
+      })
+    } as any)
+
+    const res = await launches.list()
+
+    expect(res.results).toEqual([])
   })
   it('Should throw an error when fails to make the query', async () => {
-    launchesCountSpy.mockResolvedValueOnce(2)
-    launchesFindSpy.mockReturnValueOnce({
+    laucnhesAggregateFindSpy.mockReturnValueOnce({ // from count
+      count: jest.fn().mockReturnValueOnce([{
+        project: 2
+      }])
+    } as any)
+    laucnhesAggregateFindSpy.mockReturnValueOnce({
       skip: jest.fn().mockReturnValueOnce({
           limit: jest.fn().mockRejectedValueOnce(new Error('Bad request') )
       })
     } as any)
 
-    // testing the error with .rejects
-    // expect(launches.list()).rejects.toBe(new Error('Bad request'))
       try {
-        await launches.list()
+        await launches.list('true')
       }catch (e: any) {
         console.debug(e.message)
         expect(e).toEqual(new Error('Bad request'))
       }
+  })
+  it('Should return stats data to fill in the graphs', async () => {
+    laucnhesAggregateFindSpy.mockResolvedValueOnce([launchStats])
+    laucnhesAggregateFindSpy.mockResolvedValueOnce(launchesStatsResult)
+
+    const res =  await launches.stats()
+
+    expect(res).toEqual(statsResult)
   })
 })

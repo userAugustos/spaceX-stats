@@ -67,17 +67,13 @@ export interface Launch {
   id: string
 }
 
-const numberTransform = z.custom((value) => {
-  if (typeof value === 'number') return value;
-  if (typeof value === 'string') {
-    const transformed = Number(value)
-    if (isNaN(transformed)) return null
-    return transformed
-  }
-  return null;
-}, {
-  fatal: false
-}, false);
+
+const numberTransform = z
+  .any()
+  .transform((value) => {
+    if (typeof value === 'number') return value;
+    if (typeof value === 'string') return Number(value);
+  });
 
 // Define the Zod schema for the query parameters
 export const listAllSchema = z.object({
@@ -85,3 +81,16 @@ export const listAllSchema = z.object({
   page: numberTransform.optional().default(1),
   limit: numberTransform.optional().default(4),
 });
+
+export type LaunchStats =
+  {
+    total: [{
+      total: number
+    }],
+    success: [{
+      success: number
+    }],
+    fails: [{
+      fails: number
+    }]
+  }[]

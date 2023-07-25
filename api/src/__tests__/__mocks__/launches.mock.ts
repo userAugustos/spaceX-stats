@@ -87,11 +87,80 @@ export const LaunchesDefaultData: Launch = {
   "id": "5eb87d46ffd86e000604b388"
 }
 
+const LaunchWithLookup = {
+  "_id": "64be033f06fb9176df391f8f",
+  "links": {
+    "patch": {
+      "small": "https://images2.imgbox.com/94/f2/NN6Ph45r_o.png",
+      "large": "https://images2.imgbox.com/5b/02/QcxHUb5V_o.png"
+    },
+    "reddit": {
+      "campaign": null,
+      "launch": null,
+      "media": null,
+      "recovery": null
+    },
+    "flickr": {
+      "small": {
+        "any": []
+      },
+      "original": []
+    },
+    "presskit": null,
+    "webcast": "https://www.youtube.com/watch?v=0a_00nJ_Y88",
+    "youtube_id": "0a_00nJ_Y88",
+    "article": "https://www.space.com/2196-spacex-inaugural-falcon-1-rocket-lost-launch.html",
+    "wikipedia": "https://en.wikipedia.org/wiki/DemoSat"
+  },
+  "static_fire_date_utc": "2006-03-17T00:00:00.000Z",
+  "static_fire_date_unix": 1142553600,
+  "rocket": "5e9d0d95eda69955f709d1eb",
+  "success": false,
+  "details": "Engine failure at 33 seconds and loss of vehicle",
+  "crew": [],
+  "ships": [],
+  "auto_update": true,
+  "flight_number": 1,
+  "name": "FalconSat",
+  "date_utc": "2006-03-24T22:30:00.000Z",
+  "date_unix": 1143239400,
+  "date_local": "2006-03-24T22:30:00.000Z",
+  "date_precision": "hour",
+  "upcoming": false,
+  "cores": [
+    {
+      "core": "5e9e289df35918033d3b2623",
+      "flight": 1,
+      "gridfins": false,
+      "legs": false,
+      "reused": false,
+      "landing_attempt": false,
+      "landing_success": null,
+      "landing_type": null,
+      "landpad": null,
+      "_id": "64be033f06fb9176df391f90"
+    }
+  ],
+  "id": "5eb87cd9ffd86e000604b32a",
+  "rocketData": {
+    "name": "Falcon 1"
+  }
+}
+
 
 export const listAllDefaultData = {
   "results": [
     LaunchesDefaultData
   ],
+  "totalDocs": 20,
+  "page": 1,
+  "totalPages": 5,
+  "hasNext": true,
+  "hasPrev": false
+}
+
+export const listAllDataWithlookup = {
+  results: [LaunchWithLookup],
   "totalDocs": 20,
   "page": 1,
   "totalPages": 5,
@@ -202,3 +271,31 @@ export const rocketsArr = [
     "description": "The Falcon 1 was an expendable launch system privately developed and manufactured by SpaceX during 2006-2009. On 28 September 2008, Falcon 1 became the first privately-developed liquid-fuel launch vehicle to go into orbit around the Earth.",
     "id": "5e9d0d95eda69955f709d1eb"
   }]
+
+export const launchesStatsResult = [
+  {
+    _id :"5e9d0d95eda69955f709d1eb",
+    count: 5,
+    date : [],
+    name:"Falcon 1"
+  },
+  {
+    _id :"5e9d0d95eda69955f709d1eb",
+    count: 5,
+    date : [],
+    name:"Falcon 1"
+  }
+]
+
+export const launchStats = {
+  total: [{
+    total: 205
+  }],
+    success: [{
+    success: 181
+  }],
+    fails: [{
+    fails: 5
+  }]
+}
+

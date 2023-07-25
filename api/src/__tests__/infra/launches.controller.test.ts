@@ -1,7 +1,7 @@
 
 import {Request, Response} from "express";
-import {index, listAll, listStats} from "@controller/LaunchesController";
-import {listAllSuccessRes, listAllSuccessResNoResult} from "../__mocks__/controller";
+import {index, listAll, listStats, refreshData} from "@controller/LaunchesController";
+import {listAllSuccessRes, listAllSuccessResNoResult, refreshDataResult, statsResult} from "../__mocks__/controller.mock";
 import {Launches} from "@services/Launches";
 
 let mockResponse: (status?: number | unknown, send?: Record<any, any>, json?: string) => Response;
@@ -10,6 +10,8 @@ jest.mock('@services/Launches')
 
 describe('testing success of launches controller', () => {
   const listSpy = jest.spyOn(Launches.prototype, 'list');
+  const statsSpy = jest.spyOn(Launches.prototype, 'stats');
+  const addSpy = jest.spyOn(Launches.prototype, 'add')
 
   beforeEach(() => {
     mockResponse = (status = 200, send = {}, json = '') => {
@@ -101,39 +103,34 @@ describe('testing success of launches controller', () => {
     expect(response).toBe(204)
     // expect(res.send).toBeCalledTimes(0)
   })
-  it('Should return success start message at listStats endpoint', async () => {
-    const expected = {}
-    const req = {} as Request;
-    const res = mockResponse(200, expected, '') as Response;
+  it('Should return success data response at listStats endpoint', async () => {
+    const req = {} as Request
 
-    await listStats(req, res)
+    const res = mockResponse(200, statsResult, '') as Response;
 
-    expect(res.send).toBeCalled()
-    expect(res.send).toBeCalledWith(expected)
+    statsSpy.mockResolvedValueOnce(statsResult)
+
+    expect(await listStats(req, res)).toEqual(statsResult)
+  })
+  it('Should return success data response at refresData endpoint', async () => {
+    const req = {} as Request
+
+    const res = mockResponse(200, refreshDataResult, '') as Response;
+
+    addSpy.mockResolvedValueOnce(refreshDataResult)
+
+    expect(await refreshData(req, res)).toEqual(refreshDataResult)
   })
 });
 
 describe('Testing fails of launches controller', () => {
+  const addSpy = jest.spyOn(Launches.prototype, 'add')
   afterEach(() => {
     // restore the spy created with spyOn
     jest.restoreAllMocks();
   });
 
-  it('Should throw error because of bade query request at listAll endpoint', async () => {
-    const statusObj = {
-      send: jest.fn().mockReturnValue(''),
-      json: jest.fn().mockReturnValueOnce('Invalid page or limit type parameter.')
-    }
-    const req = {
-      query: {
-        page: 'page'
-      }
-    } as unknown as Request;
-    const res = mockResponse(statusObj) as Response;
-
-    expect(await listAll(req, res)).toBe('Invalid page or limit type parameter.')
-  })
-  it('Should throw error because of some error getting list data', async () => {
+  it('Should throw error because of bad request getting list data', async () => {
     const statusObj = {
       send: jest.fn().mockReturnValue(''),
       json: jest.fn().mockReturnValueOnce({
@@ -150,6 +147,42 @@ describe('Testing fails of launches controller', () => {
 
     expect(await listAll(req, res)).toEqual({
       message: 'Bad Request'
+    })
+  })
+  it('Should throw error because could not load total launches in db', async () => {
+    const statsSpy = jest.spyOn(Launches.prototype, 'stats')
+    const statusObj = {
+      send: jest.fn().mockReturnValue(''),
+      json: jest.fn().mockReturnValue({
+        message: 'mongodb:err:3423'
+      })
+    }
+    const req = {} as Request
+
+    const res = mockResponse(statusObj, {}, '') as Response;
+
+    statsSpy.mockRejectedValueOnce(new Error('mongodb:err:3423'))
+
+    expect(await listStats(req, res)).toEqual({
+      message: 'mongodb:err:3423'
+    })
+  })
+
+  it('Should throw error because could insert in db using refresh data', async () => {
+    const statusObj = {
+      send: jest.fn().mockReturnValue(''),
+      json: jest.fn().mockReturnValueOnce({
+        message: 'mongodb:err:400'
+      })
+    }
+    const req = {} as Request
+
+    const res = mockResponse(statusObj, {}, '') as Response;
+
+    addSpy.mockRejectedValueOnce(new Error('mongodb:err:3423'))
+
+    expect(await refreshData(req, res)).toEqual({
+      message: 'mongodb:err:400'
     })
   })
 })

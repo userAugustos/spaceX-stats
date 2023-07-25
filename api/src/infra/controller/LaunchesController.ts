@@ -12,17 +12,7 @@ export async function index(_: Request, res: Response) {
 }
 
 export async function listAll(req: Request, res: Response) {
-  let validReq: { search: string, page?: number | any, limit?: number | any };
-
-  try {
-    console.debug()
-    validReq = listAllSchema.parse(req.query)
-  }catch (err: any) {
-    console.debug(err)
-    return res.status(404).json({
-      message: err.message
-    });
-  }
+  const validReq = listAllSchema.parse(req.query)
 
   try{
     const response = await launches.list(validReq.search, validReq.limit, validReq.page)
@@ -38,8 +28,11 @@ export async function listAll(req: Request, res: Response) {
 }
 
 export async function listStats(_: Request, res: Response) {
+
   try{
-    res.send({})
+    const response = await launches.stats()
+
+    return res.send(response)
   }catch (err: any) {
     return res.status(400).json({
       message: err.message
@@ -50,7 +43,7 @@ export async function listStats(_: Request, res: Response) {
 export async function refreshData(_: Request, res: Response) {
   try{
     const response = await launches.add()
-    res.send(response)
+    return res.send(response)
   }catch (err: any) {
     return res.status(400).json({
       message: err.message

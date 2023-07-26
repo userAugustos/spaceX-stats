@@ -17,7 +17,7 @@ export async function listAll(req: Request, res: Response) {
   try{
     const response = await launches.list(validReq.search, validReq.limit, validReq.page)
     if(response.results.length < 1) { //  204 no body
-      return res.status(204)
+      return res.status(204).send(response)
     }
     return res.send(response)
   }catch (err: any) {

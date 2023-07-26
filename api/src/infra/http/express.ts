@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import {index, listAll, listStats, refreshData} from '@controller/LaunchesController'
 import {connect} from "@database/connect";
 import {hydrate} from '@cron/cron'
+import cors from 'cors'
 
 config()
 
@@ -10,6 +11,7 @@ config()
 const app = express()
 
 app.use(express.json())
+app.use(cors());
 
 app.get('/', index)
 app.get('/launches', listAll)

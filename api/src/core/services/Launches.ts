@@ -1,6 +1,6 @@
 
 import {SpaceX} from "@services/spaceX";
-import mongoose from "mongoose";
+import mongoose, {FilterQuery} from "mongoose";
 import {LaunchStats} from "../types/Launch";
 
 export class Launches {
@@ -47,7 +47,7 @@ export class Launches {
     try {
       const skip = (page - 1) * limit;
       const isSearchSuccess = (search === 'true' || search === 'false')
-      let queryOr: Record<string, any>[] | Record<string, any> = [{}]
+      let queryOr: Record<string, any>[] | Record<string, any> | undefined = {}
 
       if(isSearchSuccess) {
         queryOr = {
@@ -57,11 +57,9 @@ export class Launches {
 
       if(search.length > 1 && !isSearchSuccess) {
         queryOr = {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           $or: [
-            {name: {$regex: new RegExp(search, 'i')}},
-            {'$rocketData.name': {$regex: new RegExp(search, 'i')}}
+            { name: {$regex: new RegExp(search, 'i')}},
+            {'rocketData.name': {$regex: new RegExp(search, 'i')}}
           ]
         }
       }
@@ -88,7 +86,7 @@ export class Launches {
           }
         },
         {
-          $match: queryOr
+          $match: queryOr as FilterQuery<any>,
         }
       ]).count('project')
       const totalDocs = projectsCount[0].project
@@ -133,10 +131,9 @@ export class Launches {
           },
         },
         {
-          $match: queryOr,
+          $match: queryOr as FilterQuery<any>,
         },
       ]).skip(skip).limit(limit);
-
 
       return {
         results,

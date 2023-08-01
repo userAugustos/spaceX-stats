@@ -1,6 +1,7 @@
 "use client"
-import {createContext, ReactElement, ReactNode, useContext, useReducer} from "react";
+import {createContext, ReactElement, ReactNode, useContext, useEffect, useReducer} from "react";
 import {Launch, listLaunches} from "@/types";
+import {getLaunches} from "@/utils/getLaunches";
 
 interface LaunchesContextType {
   searchTerm: string;
@@ -67,8 +68,16 @@ export function UseLaunchesContextProvider({ children }: { children: ReactElemen
   });
   const { searchTerm, data, currentPage, limit, isLoading } = state
 
+  // update data
+  useEffect(() => {
+    setIsLoading(true)
+    getLaunches(searchTerm, currentPage, limit).then(res => {
+      setData(res)
+      setIsLoading(false)
+    })
+  }, [searchTerm, currentPage, limit]);
+
   const setSearchValue = (value: string) => {
-    console.debug('dispatched')
     dispatch({ type: 'SET_SEARCH_TERM', payload: value })
   }
 

@@ -1,7 +1,7 @@
 import {listLaunches} from "@/types";
 
-export async function getLaunches(searchTerm: string = '', currentPage: number = 1, limit: number = 5): Promise<listLaunches> {
-  let url = `http://localhost:3030/launches?`
+export async function getLaunches(searchTerm?: string, currentPage?: number, limit: number = 5): Promise<listLaunches> {
+  let url = `http://192.168.100.32:3030/launches?`
 
   if (searchTerm) {
     url += `&search=${searchTerm}`;
@@ -12,10 +12,10 @@ export async function getLaunches(searchTerm: string = '', currentPage: number =
   if(limit){
     url += `&limit=${limit}`;
   }
-	let res204 = undefined;
-  
+	let res204: listLaunches | undefined = undefined;
+
 	try {
-		const res = await fetch(url).then(res => {
+		const res = await fetch(url,{ cache: 'force-cache' }).then(res => {
 			if(res.status === 204){
 				res204 = {
 					results: [],
@@ -30,15 +30,11 @@ export async function getLaunches(searchTerm: string = '', currentPage: number =
 			if (!res.ok) {
 				throw new Error('Failed to fetch data')
 			}
-	
 			return res
 		}).then<listLaunches>(res => res.json())
 
-		return res
-	} catch (error) {
-		if(res204) {
-			return res204
-		}
+		return res204 || res
+	} catch (error: any) {
 		throw new Error('Failed to fetch data', error)
 	}
   

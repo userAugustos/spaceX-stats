@@ -1,6 +1,5 @@
 "use client"
 import {useLaunchesContext} from "@/context/useLaunches";
-import {useEffect} from "react";
 import {getLaunches} from "@/utils/getLaunches";
 import {listLaunches} from "@/types";
 
@@ -22,10 +21,6 @@ export default function Bar() {
 
   const handleResetLaunches = () => {
     setIsLoading(true)
-    getLaunches('', 1, 5).then(res => {
-      setData(res)
-      setIsLoading(false)
-    })
 		setSearchValue('')
   }
 

@@ -1,26 +1,12 @@
 "use client"
 import {useLaunchesContext} from "@/context/useLaunches";
-import {useEffect} from "react";
-import {getLaunches} from "@/utils/getLaunches";
 import {GetDiffBetween} from "@/utils/getDiffBetween";
 import {Load } from "@/components/load";
 import {ItemsTable} from "@/components/search/itemsTable";
-// @ts-ignore
-import { useDebounce } from "@uidotdev/usehooks";
-
 
 export default function List() {
   const { data, limit, currentPage, nextPage, previousPage, searchTerm, setData, isLoading, setIsLoading } = useLaunchesContext();
   const flowPages = GetDiffBetween(data.page, data.totalPages)
-	const debouncedSearchTerm = useDebounce(searchTerm, 100);
-
-  useEffect(() => {
-    setIsLoading(true)
-    getLaunches(debouncedSearchTerm, currentPage, limit).then(res => {
-      setData(res)
-      setIsLoading(false)
-    })
-  }, [currentPage, debouncedSearchTerm]);
 
   return (
     <div className='flex flex-col justify-center items-center h-[550px] max-h-[800px] overflow-y-scroll bg-[#e2e1dd59] p-2 list-launches'>

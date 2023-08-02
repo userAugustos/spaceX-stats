@@ -70,11 +70,16 @@ export function UseLaunchesContextProvider({ children }: { children: ReactElemen
 
   // update data
   useEffect(() => {
-    setIsLoading(true)
-    getLaunches(searchTerm, currentPage, limit).then(res => {
-      setData(res)
+    try {
+      setIsLoading(true)
+      getLaunches(searchTerm, currentPage, limit).then(res => {
+        setData(res)
+        setIsLoading(false)
+      })
+    }catch (e) {
+      console.debug(e)
       setIsLoading(false)
-    })
+    }
   }, [searchTerm, currentPage, limit]);
 
   const setSearchValue = (value: string) => {

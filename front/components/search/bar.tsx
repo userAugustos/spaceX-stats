@@ -20,7 +20,6 @@ export default function Bar() {
   }
 
   const handleResetLaunches = () => {
-    setIsLoading(true)
 		setSearchValue('')
   }
 

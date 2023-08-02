@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import {Launch} from "@/types";
-import ytLogo from '../../public/youtube-svgrepo-com.svg'
+import ytLogo from '../../../public/youtube-svgrepo-com.svg'
 
 export default function Item({launch}: { launch: Launch }) {
   return (

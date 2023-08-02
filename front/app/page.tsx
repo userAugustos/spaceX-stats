@@ -1,10 +1,8 @@
 import Stacked from "@/components/graphs/stacked";
 import Bar from "@/components/search/bar";
-import List from "@/components/search/list";
-import {GetStaticProps} from "next";
+import List from "@/components/list/list";
 import PieGraph from "@/components/graphs/pie";
 import {statsRes} from "@/types";
-import {useLaunchesContext, UseLaunchesContextProvider} from "@/context/useLaunches";
 
 // basically this is all we need now, of course isn't pretty, but since is simples and fast, i will keep it here
 async function getData(): Promise<statsRes> {

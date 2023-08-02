@@ -37,5 +37,4 @@ export async function getLaunches(searchTerm?: string, currentPage?: number, lim
 	} catch (error: any) {
 		throw new Error('Failed to fetch data', error)
 	}
-  
 }

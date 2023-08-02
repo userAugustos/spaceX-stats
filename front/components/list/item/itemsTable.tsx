@@ -1,5 +1,5 @@
 import {Launch} from "@/types";
-import Item from "@/components/search/item";
+import Item from "@/components/list/item/item";
 
 export function ItemsTable({ launches }: { launches: Launch[] }) {
   return (

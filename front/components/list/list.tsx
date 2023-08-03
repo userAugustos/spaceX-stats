@@ -10,6 +10,7 @@ export default function List() {
 
   return (
     <div className='flex flex-col justify-center items-center h-[550px] max-h-[800px] overflow-y-scroll bg-[#e2e1dd59] p-2 list-launches'>
+
       {
         isLoading && <div className='w-full'>
           <Load />

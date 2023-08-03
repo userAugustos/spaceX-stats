@@ -1,6 +1,6 @@
 "use client"
-import {createContext, ReactElement, ReactNode, useContext, useEffect, useReducer} from "react";
-import {Launch, listLaunches} from "@/types";
+import {createContext, ReactElement, ReactNode, useContext, useEffect, useMemo, useReducer} from "react";
+import {listLaunches} from "@/types";
 import {getLaunches} from "@/utils/getLaunches";
 
 interface LaunchesContextType {
@@ -16,6 +16,8 @@ interface LaunchesContextType {
   setPage: (value: number) => void;
   isLoading: boolean;
   setIsLoading: (value: boolean) => void;
+  status: string | undefined;
+  setStatus: (status: string) => void
 }
 
 type LaunchesState = {
@@ -24,6 +26,7 @@ type LaunchesState = {
   currentPage: number;
   limit: number;
   isLoading: boolean;
+  status: string | undefined
 };
 
 const launchesReducer = (state: LaunchesState, action: { type: string; payload: any; }) => {
@@ -38,6 +41,8 @@ const launchesReducer = (state: LaunchesState, action: { type: string; payload: 
       return { ...state, limit: action.payload };
     case 'SET_ISLOADING':
       return { ...state, isLoading: action.payload }
+    case 'SET_STATUS':
+      return { ...state, status: action.payload }
     default:
       return state;
   }
@@ -55,7 +60,9 @@ export const LaunchesContext = createContext<LaunchesContextType>({
   setLimit: (value: number) => {},
   setPage: () => {},
   isLoading: false,
-  setIsLoading: (value: boolean) => {}
+  setIsLoading: (value: boolean) => {},
+  status: undefined,
+  setStatus: (status: string) => {}
 })
 
 export function UseLaunchesContextProvider({ children }: { children: ReactElement | Array<ReactElement> | ReactNode }) {
@@ -64,7 +71,8 @@ export function UseLaunchesContextProvider({ children }: { children: ReactElemen
     data:{},
     currentPage: 1,
     limit: 4,
-    isLoading: false
+    isLoading: false,
+    status: undefined
   });
   const { searchTerm, data, currentPage, limit, isLoading } = state
 
@@ -112,7 +120,15 @@ export function UseLaunchesContextProvider({ children }: { children: ReactElemen
     dispatch({ type: 'SET_ISLOADING', payload: value })
   }
 
-  return <LaunchesContext.Provider value={{ searchTerm, data, limit, currentPage, setSearchValue, setData, previousPage, nextPage, setLimit, setIsLoading, isLoading, setPage }}>{children}</LaunchesContext.Provider>
+  const setStatus = (value: string) => {
+    console.debug(value)
+    dispatch({ type: 'SET_STATUS', payload: value })
+    console.debug(status)
+  }
+
+  const memo = useMemo(() => ({ searchTerm, data, limit, currentPage,isLoading, status, setStatus, setSearchValue, setData, previousPage, nextPage, setLimit, setIsLoading, setPage }), [searchTerm, data, limit, currentPage,isLoading, status])
+
+  return <LaunchesContext.Provider value={memo}>{children}</LaunchesContext.Provider>
 }
 
 

@@ -74,7 +74,7 @@ export function UseLaunchesContextProvider({ children }: { children: ReactElemen
     isLoading: false,
     status: undefined
   });
-  const { searchTerm, data, currentPage, limit, isLoading } = state
+  const { searchTerm, data, currentPage, limit, isLoading, status } = state
 
   // update data
   useEffect(() => {

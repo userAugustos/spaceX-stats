@@ -10,7 +10,6 @@ export default function List() {
 
   return (
     <div className='flex flex-col justify-center items-center h-[550px] max-h-[800px] overflow-y-scroll bg-[#e2e1dd59] p-2 list-launches'>
-
       {
         isLoading && <div className='w-full'>
           <Load />
@@ -18,16 +17,16 @@ export default function List() {
         </div>
       }
       {
-        !isLoading && data.results?.length >= 1 ? (
+        data.results?.length >= 1 && (
             <>
               <ItemsTable launches={data.results} />
               <Pagination />
             </>
           )
-          :
-          <p>Aconteceu algum erro ao requisitar os dados</p>
       }
-
+      {
+        data.results?.length === 0 && <p>Não Encontramos nenhum Lançamento</p>
+      }
     </div>
   );
 }

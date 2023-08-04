@@ -1,11 +1,10 @@
 "use client"
 import {useLaunchesContext} from "@/context/useLaunches";
-import {listLaunches} from "@/types";
 import 'flowbite';
 import {useState} from "react";
 
 export default function Bar() {
-  const {  limit, currentPage, searchTerm, setData, setSearchValue, setStatus } = useLaunchesContext();
+  const { setSearchValue, setStatus } = useLaunchesContext();
   const [barStatus, setBarStatus] = useState<{ status: string, color: string } | undefined>(undefined)
 
   // could do it with debounce onChange input, but we have a search button...
@@ -22,12 +21,11 @@ export default function Bar() {
   }
 
   const handleSetStatus = (status: string, color: string) => {
+    setStatus(status)
     setBarStatus({
       status,
       color
     })
-    console.debug(barStatus?.status)
-    setStatus(barStatus?.status!)
   }
 
   return (
